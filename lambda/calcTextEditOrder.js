@@ -9,7 +9,7 @@ const languages = {
   UA: 0.05,
   EN: 0.12
 }
-const basicTypesOfFile = [".doc", ".docx", ".rtf"];
+const basicTypesOfFile = ['.doc', '.docx', '.rtf'];
 const MIN_RU_UKR_COST = 50;
 const MIN_EN_COST = 120;
 const SYMBOLS_RU_UKR_PER_HOUR = 1333;
@@ -52,8 +52,8 @@ function calcTextEditCost(text, type = '.docx', lang) {
 console.log(calcTextEditCost(text1400, '.docx', 'EN'))
 
 // calculate the time of text editing in minutes
-function calcTextEditHours(text, type = ".docx", lang) {
-  let min_per_symbols, 
+function calcTextEditHours(text, type = '.docx', lang) {
+  let min_per_symbols,
       extraTime = 0,
       totalTimeInMin;
 
@@ -79,7 +79,7 @@ function calcTextEditHours(text, type = ".docx", lang) {
   return totalTimeInMin;
 }
 
-console.log(calcTextEditHours(text1400, ".docx", "EN"));
+console.log(calcTextEditHours(text1400, '.docx', 'EN'));
 
 // calculate the date of deadline for order
 function getDeadlineForOrder(leadTime) {
@@ -112,9 +112,9 @@ function getDeadlineForOrder(leadTime) {
       }
       orderProcessingDate = new Date(orderProcessingDate.getTime() + 1 * 3600 * 1000);
     } else if ( // add remaining minutes before COB(close of business) to orderProcessingDate
-        orderProcessingDate.getHours() <= 18 &&
-        orderProcessingDate.getMinutes() < 59
-      ) {
+      orderProcessingDate.getHours() <= 18 &&
+      orderProcessingDate.getMinutes() < 59
+    ) {
       leadTime -= 60 - orderProcessingDate.getMinutes()
       orderProcessingDate = new Date(orderProcessingDate.getTime() + (60 - orderProcessingDate.getMinutes()) * 60 * 1000)
     } else {
@@ -160,4 +160,4 @@ function getDeadlineForOrder(leadTime) {
   return `Термін виконання: ${deadlineDateInfo} о ${deadlineTimeInfo}`;
 }
 
-console.log(getDeadlineForOrder(calcTextEditHours(text1400, ".docx", "EN")));
+console.log(getDeadlineForOrder(calcTextEditHours(text1400, '.docx', 'EN')));
