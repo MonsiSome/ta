@@ -27,6 +27,7 @@ const TWO_HOURS_IN_MIN = 120;
 // const countDateDigits = dateToDigit => dateToDigit < ZERO_BEFORE_NUM ? '0' + dateToDigit : dateToDigit;
 
 function estimateCost(text, lang, type = '.docx') {
+  if (!text) return 0;
   const textLength = typeof text === 'number' ? text : text.length;
   const minCost = settingsPerLang.minCost[lang];
 
@@ -39,6 +40,7 @@ function estimateCost(text, lang, type = '.docx') {
 }
 
 function estimateMinutes(text, lang, type = '.docx') {
+  if (!text) return 0;
   const textLength = typeof text === 'number' ? text : text.length;
   const minutesPerSymbols = textLength / settingsPerLang.symbolsPerHour[lang] * ONE_HOUR_IN_MIN;
 
@@ -53,7 +55,7 @@ function estimateMinutes(text, lang, type = '.docx') {
   return minutesPerOrder;
 }
 
-console.log(estimateMinutes(1333, 'RU', '.docx'));
+console.log(estimateMinutes(100300, 'EN', '.docx'));
 
 
 
