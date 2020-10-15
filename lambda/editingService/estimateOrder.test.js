@@ -1,5 +1,5 @@
 const { expect } = require('@jest/globals');
-const { estimateCost, estimateMinutes } = require('../editingService/estimateOrder');
+const { estimateCost, estimateMinutes, estimateDeadline } = require('../editingService/estimateOrder');
 
 describe('Estimate Cost: ', () => {
 
@@ -114,5 +114,85 @@ describe('Estimate Minutes: ', () => {
     expect(estimateMinutes(920, 'UA', '.none')).not.toBeUndefined();
     expect(estimateMinutes(920, 'UA', '.none')).toBeTruthy();
   });
+});
 
+describe('Estimate deadline date', () => {
+  
+  let arrayOfDates, arrayOfOrderDuration, i, k;
+
+  beforeEach(() => {
+    i = 0; 
+    k = 0;
+    arrayOfDates = [
+      new Date(2020, 9, 28, 12, 20, 0),
+      new Date(2020, 9, 17, 13, 35, 0),
+      new Date(2020, 9, 18, 10, 0, 0),
+      new Date(2020, 9, 16, 11, 12, 0),
+      new Date(2020, 9, 16, 17, 49, 0),
+      new Date(2020, 9, 16, 10, 1, 0),
+      new Date(2020, 9, 16, 18, 59, 0),
+      new Date(2020, 9, 19, 15, 0, 0),
+      new Date(2020, 9, 19, 16, 15, 0)
+    ];
+    arrayOfOrderDuration = [60, 60, 61, 88, 121, 240, 540, 1020, 3780];
+  });
+
+  test('should return right deadline date', () => {
+    expect(estimateDeadline(0)).toBe('');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Здамо за: одну годину');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Термін виконання: 19.09.20 о 11:00');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Термін виконання: 19.09.20 о 11:30');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Здамо за: дві години');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Термін виконання: 19.09.20 о 11:00');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Термін виконання: 16.09.20 о 14:30');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Термін виконання: 19.09.20 о 19:00');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Термін виконання: 21.09.20 о 14:00');
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBe('Термін виконання: 28.09.20 о 16:30');
+  });
+
+  test('should be defined', () => {
+    expect(estimateDeadline(0)).toBeDefined();
+    expect(estimateDeadline(0)).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeDefined();
+  });
+
+  test('should not be undefined', () => {
+    expect(estimateDeadline(0)).toBeDefined();
+    expect(estimateDeadline(0)).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).not.toBeUndefined();
+  });
+
+  test('should be truthy', () => {
+    expect(estimateDeadline(0)).toBeDefined();
+    expect(estimateDeadline(0)).not.toBeUndefined();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+    expect(estimateDeadline(arrayOfOrderDuration[i++], arrayOfDates[k++])).toBeTruthy();
+  });
+
+  test('should return string as a result', () => {
+    expect(typeof estimateDeadline(0)).toMatch(/string/);
+  });
 });

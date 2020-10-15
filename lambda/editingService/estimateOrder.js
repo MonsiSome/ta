@@ -56,19 +56,20 @@ function estimateMinutes(text, lang, type = '.docx') {
   return minutesPerOrder;
 }
 
-function estimateDeadline(leadTime) {
-  if (!leadTime) return;
-  const startOrderDate = new Date();
+function estimateDeadline(leadTime, startOrderDate = new Date()) {
+  if (!leadTime) return '';
+  let deadline;
   let processingDate = new Date(startOrderDate);
-
+  
   if (processingDate.getDay() < 6 && processingDate.getDay() > 0) {
-    const COBofStartOrderDay = new Date(new Date(startOrderDate).setHours(19, 0, 0, 0));
-    const freeTimeOfStartDay = ((COBofStartOrderDay - processingDate) / 1000 / 60) - leadTime;
-    switch (freeTimeOfStartDay >= TWO_HOURS_IN_MIN) {
-      case leadTime <= ONE_HOUR_IN_MIN:
-        return `Здамо за: одну годину`;
-      case leadTime <= TWO_HOURS_IN_MIN:
-        return `Здамо за: дві години`;
+    const COBofStartOrderDay = new Date(new Date(processingDate).setHours(19, 0, 0, 0));
+    const freeTimeOfStartDay = (COBofStartOrderDay - processingDate) / 1000 / 60;
+
+    if (freeTimeOfStartDay >= TWO_HOURS_IN_MIN && leadTime <= ONE_HOUR_IN_MIN) {
+      return `Здамо за: одну годину`;
+    }
+    if (freeTimeOfStartDay >= TWO_HOURS_IN_MIN && leadTime <= TWO_HOURS_IN_MIN) {
+      return `Здамо за: дві години`;
     }
   }
 
@@ -89,9 +90,14 @@ function estimateDeadline(leadTime) {
       processingDate = new Date(processingDate.setHours(10, 0, 0, 0));
     }
   }
-
-  const deadline = processingDate.getMinutes() < 30 ? new Date(new Date(processingDate).setMinutes(30)) 
-    : new Date(new Date(processingDate).setHours(processingDate.getHours() + 1, 0, 0, 0));
+  
+  if (processingDate.getMinutes() === 0) {
+    deadline = new Date(processingDate);
+  } else if (processingDate.getMinutes() < 30) {
+    deadline = new Date(new Date(processingDate).setMinutes(30));
+  } else {
+    deadline = new Date(new Date(processingDate).setHours(processingDate.getHours() + 1, 0, 0, 0));
+  }
 
   const deadlineInfo = {
     day: countDateDigits(deadline.getDate()),
