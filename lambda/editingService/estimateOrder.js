@@ -23,8 +23,9 @@ const OPEN_ORDER_PROCESSING_TIME_IN_MIN = 30;
 
 const ONE_HOUR_IN_MIN = 60;
 const TWO_HOURS_IN_MIN = 120;
-// const ZERO_BEFORE_NUM = 10;
-// const countDateDigits = dateToDigit => dateToDigit < ZERO_BEFORE_NUM ? '0' + dateToDigit : dateToDigit;
+
+const ZERO_BEFORE_NUM = 10;
+const countDateDigits = dateToDigit => dateToDigit < ZERO_BEFORE_NUM ? '0' + dateToDigit : dateToDigit;
 
 function estimateCost(text, lang, type = '.docx') {
   if (!text) return 0;
@@ -55,8 +56,54 @@ function estimateMinutes(text, lang, type = '.docx') {
   return minutesPerOrder;
 }
 
-console.log(estimateMinutes(100300, 'EN', '.docx'));
+function estimateDeadline(leadTime) {
+  if (!leadTime) return;
+  const startOrderDate = new Date();
+  let processingDate = new Date(startOrderDate);
 
+  if (processingDate.getDay() < 6 && processingDate.getDay() > 0) {
+    const COBofStartOrderDay = new Date(new Date(startOrderDate).setHours(19, 0, 0, 0));
+    const freeTimeOfStartDay = ((COBofStartOrderDay - processingDate) / 1000 / 60) - leadTime;
+    switch (freeTimeOfStartDay >= TWO_HOURS_IN_MIN) {
+      case leadTime <= ONE_HOUR_IN_MIN:
+        return `Здамо за: одну годину`;
+      case leadTime <= TWO_HOURS_IN_MIN:
+        return `Здамо за: дві години`;
+    }
+  }
 
+  while (leadTime > 0) {
+    if (processingDate.getDay() < 6 && processingDate.getDay() > 0) {
+      const COBofProcesOrderDay = new Date(new Date(processingDate).setHours(19, 0, 0, 0));
+      const canUseTimeToday = (COBofProcesOrderDay - processingDate) / 1000 / 60;
+      const freeTimeToday = canUseTimeToday - leadTime;
+      if (freeTimeToday >= 0) {
+        processingDate = new Date(COBofProcesOrderDay - freeTimeToday * 60 * 1000);
+        leadTime = 0;
+      } else {
+        processingDate = new Date(COBofProcesOrderDay.getTime() + 15 * 3600 * 1000);
+        leadTime -= canUseTimeToday;
+      }
+    } else {
+      processingDate = new Date(processingDate.getTime() + 24 * 3600 * 1000);
+      processingDate = new Date(processingDate.setHours(10, 0, 0, 0));
+    }
+  }
 
-module.exports = {estimateCost, estimateMinutes}
+  const deadline = processingDate.getMinutes() < 30 ? new Date(new Date(processingDate).setMinutes(30)) 
+    : new Date(new Date(processingDate).setHours(processingDate.getHours() + 1, 0, 0, 0));
+
+  const deadlineInfo = {
+    day: countDateDigits(deadline.getDate()),
+    month: countDateDigits(deadline.getMonth()),
+    year: deadline.getFullYear().toString().slice(-2),
+    hours: countDateDigits(deadline.getHours()),
+    minutes: countDateDigits(deadline.getMinutes())
+  }
+  const deadlineDateInfo = Object.values(deadlineInfo).slice(0, 3).join('.');
+  const deadlineTimeInfo = Object.values(deadlineInfo).slice(-2).join(':');
+
+  return `Термін виконання: ${deadlineDateInfo} о ${deadlineTimeInfo}`;
+}
+
+module.exports = {estimateCost, estimateMinutes, estimateDeadline};
