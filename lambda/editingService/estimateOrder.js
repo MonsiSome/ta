@@ -59,8 +59,9 @@ function estimateMinutes(text, lang, type = '.docx') {
 function estimateDeadline(leadTime, startOrderDate = new Date()) {
   if (!leadTime) return '';
   let deadline;
-  let processingDate = new Date(startOrderDate);
-  
+  let processingDate = startOrderDate.getTimezoneOffset() === 180 ? new Date(startOrderDate)
+     : new Date(startOrderDate.getTime() + (180 + startOrderDate.getTimezoneOffset()) * 60 * 1000);
+
   if (processingDate.getDay() < 6 && processingDate.getDay() > 0) {
     const COBofStartOrderDay = new Date(new Date(processingDate).setHours(19, 0, 0, 0));
     const freeTimeOfStartDay = (COBofStartOrderDay - processingDate) / 1000 / 60;

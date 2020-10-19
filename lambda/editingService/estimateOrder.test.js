@@ -124,7 +124,7 @@ describe('Estimate deadline date', () => {
     i = 0; 
     k = 0;
     arrayOfDates = [
-      new Date(2020, 9, 28, 12, 20, 0),
+      new Date(2020, 9, 21, 12, 20, 0),
       new Date(2020, 9, 17, 13, 35, 0),
       new Date(2020, 9, 18, 10, 0, 0),
       new Date(2020, 9, 16, 11, 12, 0),
